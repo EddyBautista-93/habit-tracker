@@ -75,11 +75,31 @@ namespace habit_tracker
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Main Menu");         
+            Console.WriteLine("---------");
+            Console.WriteLine("Type 0 to close application");
+            Console.WriteLine("Type 1 to View All Habits");
+            Console.WriteLine("Type 2 to Add A Habit");
+            Console.WriteLine("Type 3 to Delete a Habit");
+            Console.WriteLine("Type 4 to Update a Habit");
+            
+            string choice = Console.ReadLine();
+
+            Console.WriteLine("You Picked " + choice);
+
             SQLiteConnection sqlite_conn;
             sqlite_conn = CreateConnection();
-            CreateTable(sqlite_conn);
-            InsertData(sqlite_conn);
-            ReadData(sqlite_conn);
+            switch (choice)
+            {
+                case "1":
+                ReadData(sqlite_conn);
+                    break;
+                default:
+                    break;
+            }            
+            // CreateTable(sqlite_conn);
+            // InsertData(sqlite_conn);
+            // ReadData(sqlite_conn);
         }
     }
 }
