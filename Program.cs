@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace habit_tracker
 {
+    /// <summary>Small habit tracker console app, the goal is to build a mvp app then enhance with OOP</summary>
+    // TODO: Create Habit Class to handle a lot of the object.
+    //       Minimize code and create shorter functions.
+    //       
     class Program
     {
         static SQLiteConnection CreateConnection()
@@ -67,36 +71,59 @@ namespace habit_tracker
             conn.Clone();
         }
 
+        //Delete Data
+        static void DeleteData(SQLiteConnection conn)
+        {
+            Console.WriteLine("What habit do you want to Delete?");
+            string habit = Console.ReadLine();
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = conn.CreateCommand();
+            sqlite_cmd.CommandText = "DELETE FROM HabitTable WHERE Habit = " + habit + ";";
+            sqlite_cmd.ExecuteNonQuery();
+        }
+
+        // Update Data
+        static void UpdateData(SQLiteConnection conn)
+        {
+            Console.WriteLine("What habit do you want to Update?");
+            string habit = Console.ReadLine();
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = conn.CreateCommand();
+            sqlite_cmd.CommandText = "DELETE FROM HabitTable WHERE Habit = " + habit + ";";
+            sqlite_cmd.ExecuteNonQuery();
+        }
+
         static void Main(string[] args)
         {
             SQLiteConnection sqlite_conn;
             sqlite_conn = CreateConnection();
-            // CreateTable(sqlite_conn);
-            Console.WriteLine("Main Menu");         
+            Console.WriteLine("Main Menu");
             Console.WriteLine("---------");
             Console.WriteLine("Type 0 to close application");
             Console.WriteLine("Type 1 to View All Habits");
             Console.WriteLine("Type 2 to Add A Habit");
             Console.WriteLine("Type 3 to Delete a Habit");
             Console.WriteLine("Type 4 to Update a Habit");
-            
+
             string choice = Console.ReadLine();
             Console.WriteLine("You Picked " + choice);
 
             switch (choice)
             {
                 case "1":
-                ReadData(sqlite_conn);
+                    ReadData(sqlite_conn);
                     break;
                 case "2":
-                InsertData(sqlite_conn);
-                ReadData(sqlite_conn);
+                    InsertData(sqlite_conn);
+                    ReadData(sqlite_conn);
                     break;
                 case "3":
-
+                    DeleteData(sqlite_conn);
+                    ReadData(sqlite_conn);
+                    break;
                 default:
                     break;
-            }            
+            }
         }
     }
 }
