@@ -9,12 +9,10 @@ namespace habit_tracker
 {
     class Program
     {
-        // Method used to create a connection to the database.
         static SQLiteConnection CreateConnection()
         {
             SQLiteConnection sqlite_conn;
 
-            // Create a new db connection.
             sqlite_conn = new SQLiteConnection("Data Source=database.db;Version=3;New=True;Compress=True;");
             try
             {
@@ -27,31 +25,26 @@ namespace habit_tracker
             return sqlite_conn;
         }
 
-        // Table Creation
         static void CreateTable(SQLiteConnection conn)
         {
             SQLiteCommand sqlite_cmd;
-            string CreateSQLStatement = "CREATE TABLE SampleTable(Col1 VARCHAR(20), Col2 INT)";
-            string CreateSQLStatement1 = "CREATE TABLE SampleTable1(Col1 VARCHAR(20), Col2 INT)";
+            string CreateSQLStatement = "CREATE TABLE HabitTable(Habit VARCHAR(20), StartDate VARCHAR(20))";
             sqlite_cmd = conn.CreateCommand();
             sqlite_cmd.CommandText = CreateSQLStatement;
             sqlite_cmd.ExecuteNonQuery();
-            sqlite_cmd.CommandText = CreateSQLStatement1;
-            sqlite_cmd.ExecuteNonQuery();
+
         }
 
         // Insert data.
         static void InsertData(SQLiteConnection conn)
         {
+            Console.WriteLine("What habit do you want to add?");
+            string habit = Console.ReadLine();
+            Console.WriteLine("When will you start this habit");
+            string startDate = Console.ReadLine();
             SQLiteCommand sqlite_cmd;
             sqlite_cmd = conn.CreateCommand();
-            sqlite_cmd.CommandText = "INSERT INTO SampleTable(Col1, Col2) VALUES ('Test Text ', 1);";
-            sqlite_cmd.ExecuteNonQuery();
-            sqlite_cmd.CommandText = "INSERT INTO SampleTable(Col1, Col2) VALUES ('Test1 Text1 ', 2);";
-            sqlite_cmd.ExecuteNonQuery();
-            sqlite_cmd.CommandText = "INSERT INTO SampleTable(Col1, Col2) VALUES ('Test2 Text2 ', 3);";
-            sqlite_cmd.ExecuteNonQuery();
-            sqlite_cmd.CommandText = "INSERT INTO SampleTable1(Col1, Col2) VALUES ('Test3 Text3 ', 3);";
+            sqlite_cmd.CommandText = "INSERT INTO  HabitTable(Habit, StartDate) VALUES (' " + habit + " ', '" + startDate + "');";
             sqlite_cmd.ExecuteNonQuery();
         }
 
@@ -61,20 +54,24 @@ namespace habit_tracker
             SQLiteDataReader sqlite_dr;
             SQLiteCommand sqlite_cmd;
             sqlite_cmd = conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM SampleTable";
+            sqlite_cmd.CommandText = "SELECT * FROM HabitTable";
 
             // loop through and read the table
             sqlite_dr = sqlite_cmd.ExecuteReader();
             while (sqlite_dr.Read())
             {
                 string myReader = sqlite_dr.GetString(0);
-                Console.WriteLine(myReader);
+                string myReader1 = sqlite_dr.GetString(1);
+                Console.WriteLine(myReader, myReader1);
             }
             conn.Clone();
         }
 
         static void Main(string[] args)
         {
+            SQLiteConnection sqlite_conn;
+            sqlite_conn = CreateConnection();
+            // CreateTable(sqlite_conn);
             Console.WriteLine("Main Menu");         
             Console.WriteLine("---------");
             Console.WriteLine("Type 0 to close application");
@@ -84,22 +81,22 @@ namespace habit_tracker
             Console.WriteLine("Type 4 to Update a Habit");
             
             string choice = Console.ReadLine();
-
             Console.WriteLine("You Picked " + choice);
 
-            SQLiteConnection sqlite_conn;
-            sqlite_conn = CreateConnection();
             switch (choice)
             {
                 case "1":
                 ReadData(sqlite_conn);
                     break;
+                case "2":
+                InsertData(sqlite_conn);
+                ReadData(sqlite_conn);
+                    break;
+                case "3":
+
                 default:
                     break;
             }            
-            // CreateTable(sqlite_conn);
-            // InsertData(sqlite_conn);
-            // ReadData(sqlite_conn);
         }
     }
 }
